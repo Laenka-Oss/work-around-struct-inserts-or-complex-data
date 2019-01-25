@@ -29,4 +29,4 @@ named_struct("Project","phase1","id",054),
 named_struct("fname","Great","lname","Sopo","id",0062)
 from (select 's') t;
 
-# NOTE! I tried and it does work only on Hive. Not Impala. 
+# NOTE! Works on Hive only.
