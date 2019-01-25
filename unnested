@@ -1,0 +1,32 @@
+# A Work-around to insert into complex table  with unnested STRUCTS on hive.
+
+CREATE external TABLE unnested_struct
+(
+product    string,
+department STRUCT<project: STRING, id: int>,
+manager    STRUCT<fname:   string, lname: string, id:int>
+)
+comment 'demonstrating how to insert in unnested structs'
+Stored as parquet
+location '/user/cloudera/mestruct'
+tblproperties ('created date: '=' 2019/05','done by: '='me');
+
+# To see the detail
+Desc formatted unnested_struct;
+
+# Insert some values into our table. Here is a work-around with nested structs.
+# Assumme we want to insert some values so that they look like this:
+
+
+# product    "Ozim_drug",
+# department STRUCT<Project: "phase1",id: 054>,
+# manager    STRUCT<fname: "Great", lname: "Sopo", id:0062>
+
+Insert into unnested_struct
+select 
+"Ozim_drug",
+named_struct("Project","phase1","id",054),
+named_struct("fname","Great","lname","Sopo","id",0062)
+from (select 's') t;
+
+# NOTE! I tried and it does work only on Hive. Not Impala. 
